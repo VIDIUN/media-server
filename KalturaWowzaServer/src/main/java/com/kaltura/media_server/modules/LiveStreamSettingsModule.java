@@ -1,4 +1,4 @@
-package com.kaltura.media_server.modules;
+package com.vidiun.media_server.modules;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,12 +28,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LiveStreamSettingsModule extends ModuleBase {
 
 	private static final String OBJECT_TYPE_KEY = "objectType";
-	private static final String OBJECT_TYPE_SYNCPOINT = "KalturaSyncPoint";
-	//private static final String HEADER_TAG_TIMECODE = "EXT-KALTURA-SYNC-POINT";
+	private static final String OBJECT_TYPE_SYNCPOINT = "VidiunSyncPoint";
+	//private static final String HEADER_TAG_TIMECODE = "EXT-VIDIUN-SYNC-POINT";
 	private static final String TIMESTAMP_KEY = "timestamp";
 	private static final String ID_KEY = "id";
 	private static final Logger logger = Logger.getLogger(LiveStreamSettingsModule.class);
-	private static final String MAX_ALLOWED_PTS_DRIFT_MILLISEC = "KalturaMaxAllowedPTSDriftiMillisec";
+	private static final String MAX_ALLOWED_PTS_DRIFT_MILLISEC = "VidiunMaxAllowedPTSDriftiMillisec";
 	private static final int DEFAULT_MAX_ALLOWED_PTS_DRIFT_MILLISEC = 10000;
 	private static final int GLOBAL_SYSTEM_TIME_INDEX = 0;
 	private static final int GLOBAL_BASE_PTS_INDEX = 1;

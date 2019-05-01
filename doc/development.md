@@ -26,9 +26,9 @@ IntelliJ users can skip the installation and import the gradle project with Inte
   
   
  **Client API Update**
- - change KalturaGeneratedAPIClientsJava project and follow the README.md to build.
- - copy the new jar to KalturaWowzaServer/build/libs
- - delete gradle cache under [user home]/.gradle/caches/modules-2/files-2.1/com.kaltura/KalturaClientLib/x.x.x/
+ - change VidiunGeneratedAPIClientsJava project and follow the README.md to build.
+ - copy the new jar to VidiunWowzaServer/build/libs
+ - delete gradle cache under [user home]/.gradle/caches/modules-2/files-2.1/com.vidiun/VidiunClientLib/x.x.x/
  - build media-server
 
  **Remote Debug Troubleshooting**
@@ -41,9 +41,9 @@ IntelliJ users can skip the installation and import the gradle project with Inte
 
 
  **Client API Update**
- - change KalturaGeneratedAPIClientsJava project and follow the README.md to build.
- - copy the new jar to KalturaWowzaServer/build/tmp/artifacts/
- - delete gradle cache under [user home]/.gradle/caches/modules-2/files-2.1/com.kaltura/KalturaClientLib/x.x.x/
+ - change VidiunGeneratedAPIClientsJava project and follow the README.md to build.
+ - copy the new jar to VidiunWowzaServer/build/tmp/artifacts/
+ - delete gradle cache under [user home]/.gradle/caches/modules-2/files-2.1/com.vidiun/VidiunClientLib/x.x.x/
  - build media-server
  - test new api jar locally, update gradle.build:
  - under maven repository set the local path:
@@ -51,7 +51,7 @@ IntelliJ users can skip the installation and import the gradle project with Inte
   repositories {
          mavenCentral()
          maven {
-             url uri('/Users/john.jordan/repositories/KalturaGeneratedAPIClientsJava/maven')
+             url uri('/Users/john.jordan/repositories/VidiunGeneratedAPIClientsJava/maven')
          }
      }
  - in addition update the jar version in build.gradle's dependencies section

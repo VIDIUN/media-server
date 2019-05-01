@@ -1,4 +1,4 @@
-package com.kaltura.media_server.services;
+package com.vidiun.media_server.services;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
-import com.kaltura.client.types.KalturaLiveEntry;
+import com.vidiun.client.types.VidiunLiveEntry;
 import com.wowza.wms.application.IApplicationInstance;
 import com.wowza.wms.client.IClient;
 import com.wowza.wms.rtp.model.RTPSession;
@@ -30,7 +30,7 @@ public class Utils {
     public static HashMap<String, String> getRtmpUrlParameters(String rtmpUrl, String queryString){
 
 
-        final String NewPattern= ":\\/\\/([01]_[\\d\\w]{8}).([pb])\\.(?:[^.]*\\.)*kpublish\\.kaltura\\.com";
+        final String NewPattern= ":\\/\\/([01]_[\\d\\w]{8}).([pb])\\.(?:[^.]*\\.)*vpublish\\.vidiun\\.com";
         Matcher matcher;
 
         logger.info("Query-String [" + queryString + "]");
@@ -193,14 +193,14 @@ public class Utils {
         String entryId = null;
         try {
             synchronized (properties) {
-                entryId = (String) properties.getProperty(Constants.KALTURA_LIVE_ENTRY_ID);
+                entryId = (String) properties.getProperty(Constants.VIDIUN_LIVE_ENTRY_ID);
             }
         } catch (Exception e) {
             logger.warn("(" + sessionId + ") no streams attached to client." + e);
         }
 
         if (entryId == null) {
-            logger.error("(" + sessionId + ") failed to get property \"" + Constants.KALTURA_LIVE_ENTRY_ID + " \" from client");
+            logger.error("(" + sessionId + ") failed to get property \"" + Constants.VIDIUN_LIVE_ENTRY_ID + " \" from client");
         }
         return entryId;
     }
@@ -209,19 +209,19 @@ public class Utils {
     // if stream is RTSP, client is not available for ingest stream but is some cases neither is RTPSteam object.
     // In that case reply will be "UNKNOWN_STREAM_TYPE" even though it is RTSP stream.
     // Waiting reply from wowza how to get correct type.
-    public static KalturaStreamType getStreamType(IMediaStream stream, String streamName) {
+    public static VidiunStreamType getStreamType(IMediaStream stream, String streamName) {
 
         if (stream.isTranscodeResult()) {
             logger.warn("[ "+ streamName +" ] cannot verify stream type from transcode stream");
-            return KalturaStreamType.UNKNOWN_STREAM_TYPE;
+            return VidiunStreamType.UNKNOWN_STREAM_TYPE;
         }
         if (stream.getClient() != null) {
-            return KalturaStreamType.RTMP;
+            return VidiunStreamType.RTMP;
         } else if (stream.getRTPStream() != null && stream.getRTPStream().getSession() !=null){
-            return KalturaStreamType.RTSP;
+            return VidiunStreamType.RTSP;
         }
 
-        return KalturaStreamType.UNKNOWN_STREAM_TYPE;
+        return VidiunStreamType.UNKNOWN_STREAM_TYPE;
 
     }
 

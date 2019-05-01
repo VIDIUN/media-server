@@ -1,4 +1,4 @@
-package com.kaltura.media_server.listeners;
+package com.vidiun.media_server.listeners;
 
 import org.apache.log4j.Logger;
 
@@ -6,8 +6,8 @@ import com.wowza.wms.application.IApplicationInstance;
 import com.wowza.wms.server.*;
 import com.wowza.wms.vhost.IVHost;
 import com.wowza.wms.vhost.VHostSingleton;
-import com.kaltura.media_server.services.KalturaAPI;
-import com.kaltura.media_server.services.KalturaUncaughtExceptionHnadler;
+import com.vidiun.media_server.services.VidiunAPI;
+import com.vidiun.media_server.services.VidiunUncaughtExceptionHnadler;
 
 import java.util.Map;
 
@@ -28,15 +28,15 @@ public class ServerListener implements IServerNotify2 {
 	public void onServerInit(IServer server) {
 		config = server.getProperties();
 		try {
-			KalturaAPI.initKalturaAPI(config);
-			logger.info("listeners.ServerListener::onServerInit Initialized Kaltura server");
+			VidiunAPI.initVidiunAPI(config);
+			logger.info("listeners.ServerListener::onServerInit Initialized Vidiun server");
 
-			loadAndLockAppInstance(IVHost.VHOST_DEFAULT, "kLive", IApplicationInstance.DEFAULT_APPINSTANCE_NAME);
+			loadAndLockAppInstance(IVHost.VHOST_DEFAULT, "vLive", IApplicationInstance.DEFAULT_APPINSTANCE_NAME);
 
 		} catch ( Exception e) {
-			logger.error("listeners.ServerListener::onServerInit Failed to initialize services.KalturaAPI: " + e.getMessage());
+			logger.error("listeners.ServerListener::onServerInit Failed to initialize services.VidiunAPI: " + e.getMessage());
 		}
-		Thread.setDefaultUncaughtExceptionHandler(new KalturaUncaughtExceptionHnadler());
+		Thread.setDefaultUncaughtExceptionHandler(new VidiunUncaughtExceptionHnadler());
 	}
 
 	public void onServerShutdownStart(IServer server) {

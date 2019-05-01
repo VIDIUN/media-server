@@ -1,4 +1,4 @@
-package com.kaltura.media_server.services;
+package com.vidiun.media_server.services;
 
 /**
  * Created by ron.yadgar on 02/06/2016.
@@ -13,13 +13,13 @@ public class Constants {
     public final static int AUTHENTICATION_ALERT_TOO_MANY_TRANSCODED_STREAMS = 118;
     public final static int AUTHENTICATION_ALERT_SEVERITY = 4;
     public final static String HTTP_PROVIDER_KEY = "diagnostics";
-    public final static int KALTURA_REJECTED_STEAMS_SIZE = 100;
-    public final static String KALTURA_PERMANENT_SESSION_KEY = "kalturaWowzaPermanentSessionKey";
+    public final static int VIDIUN_REJECTED_STEAMS_SIZE = 100;
+    public final static String VIDIUN_PERMANENT_SESSION_KEY = "vidiunWowzaPermanentSessionKey";
     public final static String CLIENT_PROPERTY_CONNECT_URL = "connecttcUrl";
     public final static String CLIENT_PROPERTY_ENCODER = "connectflashVer";
     public final static String CLIENT_PROPERTY_SERVER_INDEX = "serverIndex";
-    public final static String CLIENT_PROPERTY_KALTURA_LIVE_ENTRY = "KalturaLiveEntry";
-    public final static String CLIENT_PROPERTY_KALTURA_LIVE_ASSET_LIST = "KalturaLiveAssetList";
+    public final static String CLIENT_PROPERTY_VIDIUN_LIVE_ENTRY = "VidiunLiveEntry";
+    public final static String CLIENT_PROPERTY_VIDIUN_LIVE_ASSET_LIST = "VidiunLiveAssetList";
     public final static String REQUEST_PROPERTY_PARTNER_ID = "p";
     public final static String REQUEST_PROPERTY_ENTRY_ID = "e";
     public final static String REQUEST_PROPERTY_SERVER_INDEX = "i";
@@ -52,16 +52,16 @@ public class Constants {
     public static final String[] streamParams = {ONMETADATA_AUDIODATARATE, ONMETADATA_VIDEODATARATE, ONMETADATA_WIDTH,
             ONMETADATA_HEIGHT, ONMETADATA_FRAMERATE, ONMETADATA_VIDEOCODECIDSTR, ONMETADATA_AUDIOCODECIDSTR};
     public static final int DEFAULT_CHUNK_DURATION_MILLISECONDS = 6000;
-    public static final String STREAM_ACTION_LISTENER_PROPERTY = "KalturaStreamActionListenerProperty";
-    public static final int KALTURA_SYNC_POINTS_INTERVAL_PROPERTY = 60 * 1000;
-    public static final String KALTURA_LIVE_ENTRY_ID = "KalturaLiveEntryId";
-    public static final String KALTURA_ENTRY_VALIDATED_TIME = "KalturaEntryValidatedTime";
-    public static final String KALTURA_ENTRY_AUTHENTICATION_LOCK = "KalturaEntryAuthenticationLock";
-    public static final String KALTURA_ENTRY_AUTHENTICATION_ERROR_FLAG = "KalturaEntryAuthenticationFlag";
-    public static final String KALTURA_ENTRY_AUTHENTICATION_ERROR_MSG = "KalturaEntryAuthenticationMsg";
-    public static final String KALTURA_ENTRY_AUTHENTICATION_ERROR_TIME = "KalturaEntryAuthenticationTime";
-    public static final int KALTURA_PERSISTENCE_DATA_MIN_ENTRY_TIME = 30000;
-    public static final int KALTURA_ENTRY_PERSISTENCE_CLEANUP_START = 10000;
-    public static final int KALTURA_TIME_BETWEEN_PERSISTENCE_CLEANUP = 60000;
-    public static final int KALTURA_MIN_TIME_BETWEEN_AUTHENTICATIONS = 10000;
+    public static final String STREAM_ACTION_LISTENER_PROPERTY = "VidiunStreamActionListenerProperty";
+    public static final int VIDIUN_SYNC_POINTS_INTERVAL_PROPERTY = 60 * 1000;
+    public static final String VIDIUN_LIVE_ENTRY_ID = "VidiunLiveEntryId";
+    public static final String VIDIUN_ENTRY_VALIDATED_TIME = "VidiunEntryValidatedTime";
+    public static final String VIDIUN_ENTRY_AUTHENTICATION_LOCK = "VidiunEntryAuthenticationLock";
+    public static final String VIDIUN_ENTRY_AUTHENTICATION_ERROR_FLAG = "VidiunEntryAuthenticationFlag";
+    public static final String VIDIUN_ENTRY_AUTHENTICATION_ERROR_MSG = "VidiunEntryAuthenticationMsg";
+    public static final String VIDIUN_ENTRY_AUTHENTICATION_ERROR_TIME = "VidiunEntryAuthenticationTime";
+    public static final int VIDIUN_PERSISTENCE_DATA_MIN_ENTRY_TIME = 30000;
+    public static final int VIDIUN_ENTRY_PERSISTENCE_CLEANUP_START = 10000;
+    public static final int VIDIUN_TIME_BETWEEN_PERSISTENCE_CLEANUP = 60000;
+    public static final int VIDIUN_MIN_TIME_BETWEEN_AUTHENTICATIONS = 10000;
 }

@@ -1,9 +1,9 @@
 /**
  * Created by noam.arad on 7/19/2017.
  */
-package com.kaltura.media_server.modules;
+package com.vidiun.media_server.modules;
 
-import com.kaltura.media_server.services.Utils;
+import com.vidiun.media_server.services.Utils;
 import com.wowza.wms.http.*;
 import com.wowza.wms.vhost.*;
 import org.apache.log4j.Logger;

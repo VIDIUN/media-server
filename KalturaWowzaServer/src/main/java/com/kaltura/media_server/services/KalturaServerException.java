@@ -1,13 +1,13 @@
-package com.kaltura.media_server.services;
+package com.vidiun.media_server.services;
 
 @SuppressWarnings("serial")
-public class KalturaServerException extends Exception {
+public class VidiunServerException extends Exception {
 
-	public KalturaServerException(String message) {
+	public VidiunServerException(String message) {
 		super(message);
 	}
 
-	public KalturaServerException(String message, Throwable throwable) {
+	public VidiunServerException(String message, Throwable throwable) {
 		super(message, throwable);
 	}
 }
