@@ -17,13 +17,13 @@
         mavenCentral()
         maven {
             //TODO replace to master
-            url "https://raw.github.com/kaltura/KalturaGeneratedAPIClientsJava/wowza-releases/maven"
+            url "https://raw.github.com/vidiun/VidiunGeneratedAPIClientsJava/wowza-releases/maven"
         }
     }
 
     dependencies {
         //TODO use the + sign for latest version when we start to use repository manager
-        compile 'com.kaltura:KalturaClientLib:3.3.6'
+        compile 'com.vidiun:VidiunClientLib:3.3.6'
         provided 'log4j:log4j:1.2.17'
         compile 'commons-codec:commons-codec:1.4'
         compile 'commons-httpclient:commons-httpclient:3.1'

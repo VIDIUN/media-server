@@ -1,4 +1,4 @@
-package com.kaltura.media_server.modules;
+package com.vidiun.media_server.modules;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wowza.wms.amf.*;
@@ -17,7 +17,7 @@ import com.wowza.wms.stream.livetranscoder.ILiveStreamTranscoderNotify;
 import com.wowza.util.FLVUtils;
 import com.wowza.wms.transcoder.model.LiveStreamTranscoder;
 import com.wowza.wms.transcoder.model.TranscoderStreamNameGroup;
-import com.kaltura.media_server.services.*;
+import com.vidiun.media_server.services.*;
 import java.io.*;
 import java.net.URLEncoder;
 import java.util.*;

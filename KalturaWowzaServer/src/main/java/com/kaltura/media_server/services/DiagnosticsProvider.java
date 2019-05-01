@@ -1,4 +1,4 @@
-package com.kaltura.media_server.services;
+package com.vidiun.media_server.services;
 
 /**
  * Created by ron.yadgar on 23/11/2016.
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import com.wowza.wms.stream.live.MediaStreamLive;
 import java.net.InetAddress;
-import com.kaltura.media_server.modules.LiveStreamSettingsModule.PacketListener;
+import com.vidiun.media_server.modules.LiveStreamSettingsModule.PacketListener;
 
 public class DiagnosticsProvider extends HTTProvider2Base
 {
@@ -257,7 +257,7 @@ public class DiagnosticsProvider extends HTTProvider2Base
         rejcetedStream.put("IP", IP);
         String timeStamp = Long.toString(System.currentTimeMillis());
         rejcetedStream.put("Time" , timeStamp);
-        if (errorDiagnostics.size() >= Constants.KALTURA_REJECTED_STEAMS_SIZE){
+        if (errorDiagnostics.size() >= Constants.VIDIUN_REJECTED_STEAMS_SIZE){
             errorDiagnostics.remove(0);
         }
         errorDiagnostics.add(rejcetedStream);

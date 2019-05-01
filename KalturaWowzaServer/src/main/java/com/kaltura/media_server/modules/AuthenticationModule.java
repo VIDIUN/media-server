@@ -1,11 +1,11 @@
-package com.kaltura.media_server.modules;
+package com.vidiun.media_server.modules;
 /**
  * Created by ron.yadgar on 09/05/2016.
  */
 
-import com.kaltura.client.KalturaApiException;
-import com.kaltura.client.enums.KalturaEntryServerNodeType;
-import com.kaltura.client.types.KalturaLiveEntry;
+import com.vidiun.client.VidiunApiException;
+import com.vidiun.client.enums.VidiunEntryServerNodeType;
+import com.vidiun.client.types.VidiunLiveEntry;
 import com.wowza.wms.amf.AMFDataList;
 import com.wowza.wms.application.IApplicationInstance;
 import com.wowza.wms.application.WMSProperties;
@@ -16,12 +16,12 @@ import com.wowza.wms.stream.IMediaStream;
 import com.wowza.wms.stream.MediaStreamActionNotifyBase;
 import org.apache.log4j.Logger;
 import com.wowza.wms.rtp.model.RTPSession;
-import com.kaltura.media_server.services.*;
+import com.vidiun.media_server.services.*;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.regex.Matcher;
-import com.kaltura.media_server.services.KalturaStreamType;
+import com.vidiun.media_server.services.VidiunStreamType;
 
 public class AuthenticationModule extends ModuleBase  {
     private static final Logger logger = Logger.getLogger(AuthenticationModule.class);
@@ -38,7 +38,7 @@ public class AuthenticationModule extends ModuleBase  {
     public void onAppStart(final IApplicationInstance appInstance) {
         logger.info("Initiallizing " + appInstance.getName());
         this.appInstance = appInstance;
-        KalturaEntryDataPersistence.setAppInstance(appInstance);
+        VidiunEntryDataPersistence.setAppInstance(appInstance);
     }
 
     public void onConnect(IClient client, RequestFunction function, AMFDataList params) {
@@ -58,7 +58,7 @@ public class AuthenticationModule extends ModuleBase  {
         }
     }
 
-    private void onClientConnect(WMSProperties properties, HashMap<String, String> requestParams) throws KalturaApiException, ClientConnectException, Exception {
+    private void onClientConnect(WMSProperties properties, HashMap<String, String> requestParams) throws VidiunApiException, ClientConnectException, Exception {
 
         if (!requestParams.containsKey(Constants.REQUEST_PROPERTY_ENTRY_ID)){
             throw new ClientConnectException("Missing argument: entryId");
@@ -80,32 +80,32 @@ public class AuthenticationModule extends ModuleBase  {
 
         synchronized (properties) {
             properties.setProperty(Constants.CLIENT_PROPERTY_SERVER_INDEX, propertyServerIndex);
-            properties.setProperty(Constants.KALTURA_LIVE_ENTRY_ID, entryId);
+            properties.setProperty(Constants.VIDIUN_LIVE_ENTRY_ID, entryId);
         }
         authenticate(entryId, partnerId, token, propertyServerIndex);
     }
 
-    private void authenticate(String entryId, int partnerId, String token, String propertyServerIndex) throws KalturaApiException, ClientConnectException, Exception {
-        Object authenticationLock = KalturaEntryDataPersistence.getLock(entryId);
-        KalturaEntryServerNodeType serverIndex = KalturaEntryServerNodeType.get(propertyServerIndex);
+    private void authenticate(String entryId, int partnerId, String token, String propertyServerIndex) throws VidiunApiException, ClientConnectException, Exception {
+        Object authenticationLock = VidiunEntryDataPersistence.getLock(entryId);
+        VidiunEntryServerNodeType serverIndex = VidiunEntryServerNodeType.get(propertyServerIndex);
         synchronized (authenticationLock) {
             try {
                 logger.debug("(" + entryId + ") Starting authentication process");
-                if (Boolean.TRUE.equals(KalturaEntryDataPersistence.getPropertyByEntry(entryId, Constants.KALTURA_ENTRY_AUTHENTICATION_ERROR_FLAG))) {
+                if (Boolean.TRUE.equals(VidiunEntryDataPersistence.getPropertyByEntry(entryId, Constants.VIDIUN_ENTRY_AUTHENTICATION_ERROR_FLAG))) {
                     long currentTime = System.currentTimeMillis();
-                    long errorTime = (long)KalturaEntryDataPersistence.getPropertyByEntry(entryId, Constants.KALTURA_ENTRY_AUTHENTICATION_ERROR_TIME);
-                    String errMsg = (String)KalturaEntryDataPersistence.getPropertyByEntry(entryId, Constants.KALTURA_ENTRY_AUTHENTICATION_ERROR_MSG);
+                    long errorTime = (long)VidiunEntryDataPersistence.getPropertyByEntry(entryId, Constants.VIDIUN_ENTRY_AUTHENTICATION_ERROR_TIME);
+                    String errMsg = (String)VidiunEntryDataPersistence.getPropertyByEntry(entryId, Constants.VIDIUN_ENTRY_AUTHENTICATION_ERROR_MSG);
                     long timeDiff = (currentTime - errorTime)/1000;
                     throw new Exception("Connection blocked due to previous error [" + timeDiff + "] seconds ago: " + errMsg +
-                            ". Try to connect in " + ((Constants.KALTURA_PERSISTENCE_DATA_MIN_ENTRY_TIME / 1000) - timeDiff) + " seconds");
+                            ". Try to connect in " + ((Constants.VIDIUN_PERSISTENCE_DATA_MIN_ENTRY_TIME / 1000) - timeDiff) + " seconds");
                 }
                 long currentTime = System.currentTimeMillis();
-                Object entryLastValidationTime = KalturaEntryDataPersistence.setProperty(entryId, Constants.KALTURA_ENTRY_VALIDATED_TIME, currentTime);
+                Object entryLastValidationTime = VidiunEntryDataPersistence.setProperty(entryId, Constants.VIDIUN_ENTRY_VALIDATED_TIME, currentTime);
 
-                if ((entryLastValidationTime == null) || (currentTime - (long)entryLastValidationTime > Constants.KALTURA_MIN_TIME_BETWEEN_AUTHENTICATIONS)) {
-                    KalturaLiveEntry liveEntry = (KalturaLiveEntry) KalturaAPI.getKalturaAPI().authenticate(entryId, partnerId, token, serverIndex);
-                    KalturaEntryDataPersistence.setProperty(entryId, Constants.CLIENT_PROPERTY_KALTURA_LIVE_ENTRY, liveEntry);
-                    KalturaEntryDataPersistence.setProperty(entryId, Constants.KALTURA_ENTRY_AUTHENTICATION_ERROR_FLAG, false);
+                if ((entryLastValidationTime == null) || (currentTime - (long)entryLastValidationTime > Constants.VIDIUN_MIN_TIME_BETWEEN_AUTHENTICATIONS)) {
+                    VidiunLiveEntry liveEntry = (VidiunLiveEntry) VidiunAPI.getVidiunAPI().authenticate(entryId, partnerId, token, serverIndex);
+                    VidiunEntryDataPersistence.setProperty(entryId, Constants.CLIENT_PROPERTY_VIDIUN_LIVE_ENTRY, liveEntry);
+                    VidiunEntryDataPersistence.setProperty(entryId, Constants.VIDIUN_ENTRY_AUTHENTICATION_ERROR_FLAG, false);
                     logger.info("(" + entryId + ") Entry authenticated successfully!");
                 } else {
                     logger.debug("(" + entryId + ") Entry did not authenticate! Last authentication: [" + (currentTime - (long)entryLastValidationTime) + "] MS ago");
@@ -113,18 +113,18 @@ public class AuthenticationModule extends ModuleBase  {
             }
             catch (Exception e) {
                 logger.error("(" + entryId + ") Exception was thrown during authentication process");
-                KalturaEntryDataPersistence.setProperty(entryId, Constants.KALTURA_ENTRY_AUTHENTICATION_ERROR_FLAG, true);
-                KalturaEntryDataPersistence.setProperty(entryId, Constants.KALTURA_ENTRY_AUTHENTICATION_ERROR_TIME, System.currentTimeMillis());
-                KalturaEntryDataPersistence.setProperty(entryId, Constants.KALTURA_ENTRY_AUTHENTICATION_ERROR_MSG, e.getMessage());
-                KalturaEntryDataPersistence.setProperty(entryId, Constants.KALTURA_ENTRY_VALIDATED_TIME, (long)0);
+                VidiunEntryDataPersistence.setProperty(entryId, Constants.VIDIUN_ENTRY_AUTHENTICATION_ERROR_FLAG, true);
+                VidiunEntryDataPersistence.setProperty(entryId, Constants.VIDIUN_ENTRY_AUTHENTICATION_ERROR_TIME, System.currentTimeMillis());
+                VidiunEntryDataPersistence.setProperty(entryId, Constants.VIDIUN_ENTRY_AUTHENTICATION_ERROR_MSG, e.getMessage());
+                VidiunEntryDataPersistence.setProperty(entryId, Constants.VIDIUN_ENTRY_VALIDATED_TIME, (long)0);
 
-                String exceptionType  = new String(((KalturaApiException) e).code);
+                String exceptionType  = new String(((VidiunApiException) e).code);
                 // Alerts thrown by authentication failure:
                 // 1) Wrong Token: token (LIVE_STREAM_INVALID_TOKEN)
                 // 2) Entry doesn't exist: entry (ENTRY_ID_NOT_FOUND)
                 // 4) No live permission: ---
                 // 5) Passed quota: (LIVE_STREAM_EXCEEDED_MAX_PASSTHRU)
-                KalturaAPI.getKalturaAPI().sendBeacon(entryId, partnerId, exceptionType, token, propertyServerIndex + "_healthData");
+                VidiunAPI.getVidiunAPI().sendBeacon(entryId, partnerId, exceptionType, token, propertyServerIndex + "_healthData");
                 throw new ClientConnectException("(" + entryId + ") authentication failed. " + e.getMessage());
             }
         }
@@ -134,7 +134,7 @@ public class AuthenticationModule extends ModuleBase  {
         try{
             String entryId = Utils.getEntryIdFromClient(client);
             logger.info("(" + entryId + ") Entry stopped");
-            KalturaEntryDataPersistence.entriesMapCleanUp();
+            VidiunEntryDataPersistence.entriesMapCleanUp();
         }
         catch (Exception  e){
             logger.info("Error" + e.getMessage());
@@ -196,7 +196,7 @@ public class AuthenticationModule extends ModuleBase  {
             logger.debug("onRTPSessionDestroy - [" + rtpSession.getSessionId() + "]");
             String entryId = Utils.getEntryIdFromRTPSession(rtpSession);
             logger.info("Entry removed [" + entryId + "]");
-            KalturaEntryDataPersistence.entriesMapCleanUp();
+            VidiunEntryDataPersistence.entriesMapCleanUp();
         }
         catch (Exception  e){
             logger.info("Error" + e.getMessage());
@@ -211,7 +211,7 @@ public class AuthenticationModule extends ModuleBase  {
 
             logger.error(msg);
             IClient client = stream.getClient();
-            KalturaStreamType streamType = Utils.getStreamType(stream, stream.getName());
+            VidiunStreamType streamType = Utils.getStreamType(stream, stream.getName());
 
             switch(streamType) {
                 case RTMP:
@@ -267,7 +267,7 @@ public class AuthenticationModule extends ModuleBase  {
                     String msg = "Published  stream name [" + streamName + "] does not match entry id [" + entryByClient  + "]";
                     if (client != null) {
                         HashMap<String, String> queryParameters = Utils.getQueryMap(client.getQueryStr());
-                        KalturaAPI.getKalturaAPI().sendBeacon(entryByClient,
+                        VidiunAPI.getVidiunAPI().sendBeacon(entryByClient,
                                 Integer.parseInt(queryParameters.get(Constants.REQUEST_PROPERTY_PARTNER_ID)),
                                 "INCORRECT_STREAM_NAME",
                                 streamName,

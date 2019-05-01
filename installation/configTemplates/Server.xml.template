@@ -43,8 +43,8 @@
 		<!-- JMXUrl: service:jmx:rmi://localhost:8084/jndi/rmi://localhost:8085/jmxrmi -->
 		<JMXRemoteConfiguration>
 			<Enable>true</Enable>
-			<IpAddress>${com.kaltura.com.kaltura.ipaddress}</IpAddress> <!-- set to localhost or internal ip address if behind NAT -->
-			<RMIServerHostName>${com.kaltura.com.kaltura.ipaddress}</RMIServerHostName> <!-- set to external ip address or domain name if behind NAT -->
+			<IpAddress>${com.vidiun.com.vidiun.ipaddress}</IpAddress> <!-- set to localhost or internal ip address if behind NAT -->
+			<RMIServerHostName>${com.vidiun.com.vidiun.ipaddress}</RMIServerHostName> <!-- set to external ip address or domain name if behind NAT -->
 			<RMIConnectionPort>8084</RMIConnectionPort>
 			<RMIRegistryPort>8085</RMIRegistryPort>
 			<Authenticate>false</Authenticate>
@@ -71,7 +71,7 @@
 			</ServerListener>
 			-->
 			<ServerListener>
-				<BaseClass>com.kaltura.media_server.listeners.ServerListener</BaseClass>
+				<BaseClass>com.vidiun.media_server.listeners.ServerListener</BaseClass>
 			</ServerListener>
 		</ServerListeners>
 		<VHostListeners>
@@ -101,22 +101,22 @@
 		<!-- Properties defined here will be added to the IServer.getProperties() collection -->
 		<Properties>
 			<Property>
-				<Name>KalturaServerURL</Name>
-				<Value>@KALTURA_SERVICE_URL@</Value>
+				<Name>VidiunServerURL</Name>
+				<Value>@VIDIUN_SERVICE_URL@</Value>
 				<Type>String</Type>
 			</Property>
 			<Property>
-				<Name>KalturaPartnerId</Name>
-				<Value>@KALTURA_PARTNER_ID@</Value>
+				<Name>VidiunPartnerId</Name>
+				<Value>@VIDIUN_PARTNER_ID@</Value>
 				<Type>Integer</Type>
 			</Property>
 			<Property>
-				<Name>KalturaServerAdminSecret</Name>
-				<Value>@KALTURA_PARTNER_ADMIN_SECRET@</Value>
+				<Name>VidiunServerAdminSecret</Name>
+				<Value>@VIDIUN_PARTNER_ADMIN_SECRET@</Value>
 				<Type>String</Type>
 			</Property>
 			<Property>
-				<Name>KalturaServerTimeout</Name>
+				<Name>VidiunServerTimeout</Name>
 				<Value>180</Value>
 				<Type>String</Type>
 			</Property>

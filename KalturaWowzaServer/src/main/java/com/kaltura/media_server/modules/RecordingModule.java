@@ -1,4 +1,4 @@
-package com.kaltura.media_server.modules;
+package com.vidiun.media_server.modules;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,11 +16,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 
 
-import com.kaltura.client.KalturaApiException;
-import com.kaltura.client.enums.KalturaRecordStatus;
-import com.kaltura.client.types.*;
+import com.vidiun.client.VidiunApiException;
+import com.vidiun.client.enums.VidiunRecordStatus;
+import com.vidiun.client.types.*;
 import org.apache.log4j.Logger;
-import com.kaltura.client.enums.KalturaEntryServerNodeType;
+import com.vidiun.client.enums.VidiunEntryServerNodeType;
 
 import com.wowza.wms.livestreamrecord.model.ILiveStreamRecord;
 import com.wowza.wms.livestreamrecord.model.ILiveStreamRecordNotify;
@@ -42,8 +42,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import com.kaltura.media_server.services.*;
-import com.kaltura.media_server.listeners.ServerListener;
+import com.vidiun.media_server.services.*;
+import com.vidiun.media_server.listeners.ServerListener;
 
 public class RecordingModule  extends ModuleBase {
 
@@ -59,9 +59,9 @@ public class RecordingModule  extends ModuleBase {
     Map<String, Object> serverConfiguration;
 
     class FlavorRecorder extends LiveStreamRecorderMP4 implements ILiveStreamRecordNotify {
-        private KalturaLiveEntry liveEntry;
-        private KalturaLiveAsset liveAsset;
-        private KalturaEntryServerNodeType index;
+        private VidiunLiveEntry liveEntry;
+        private VidiunLiveAsset liveAsset;
+        private VidiunEntryServerNodeType index;
         private boolean isLastChunk = false;
         abstract class AppendRecordingTimerTask extends TimerTask {
 
@@ -76,7 +76,7 @@ public class RecordingModule  extends ModuleBase {
             }
         }
 
-        public FlavorRecorder(KalturaLiveEntry liveEntry, KalturaLiveAsset liveAsset, KalturaEntryServerNodeType index) {
+        public FlavorRecorder(VidiunLiveEntry liveEntry, VidiunLiveAsset liveAsset, VidiunEntryServerNodeType index) {
             super();
 
             this.liveEntry = liveEntry;
@@ -128,7 +128,7 @@ public class RecordingModule  extends ModuleBase {
                 @Override
                 public void run() {
 
-                    KalturaLiveEntry updatedEntry;
+                    VidiunLiveEntry updatedEntry;
 
                     logger.debug("Running appendRecording task");
 
@@ -159,10 +159,10 @@ public class RecordingModule  extends ModuleBase {
             logger.info("Stop recording: entry Id [" + liveEntry.id + "], asset Id [" + liveAsset.id + "], current media server index: " + index);
 
 
-            if (liveAsset.tags.contains(Constants.RECORDING_ANCHOR_TAG_VALUE) && KalturaEntryServerNodeType.LIVE_PRIMARY.equals(index)) {
+            if (liveAsset.tags.contains(Constants.RECORDING_ANCHOR_TAG_VALUE) && VidiunEntryServerNodeType.LIVE_PRIMARY.equals(index)) {
                 if (liveEntry.recordedEntryId != null && liveEntry.recordedEntryId.length() > 0) {
                     logger.info("Cancel replacement is required");
-                    KalturaAPI.getKalturaAPI().cancelReplace(liveEntry);
+                    VidiunAPI.getVidiunAPI().cancelReplace(liveEntry);
                 } else {
                     logger.info("skipping cancel replacement, new recording enabled");
                 }
@@ -205,8 +205,8 @@ public class RecordingModule  extends ModuleBase {
         synchronized (groupInitialized) {
             if (!groupInitialized) {
                 String groupName = Constants.DEFAULT_RECORDED_FILE_GROUP;
-                if (serverConfiguration.containsKey(Constants.KALTURA_RECORDED_FILE_GROUP)) {
-                    groupName = (String) serverConfiguration.get(Constants.KALTURA_RECORDED_FILE_GROUP);
+                if (serverConfiguration.containsKey(Constants.VIDIUN_RECORDED_FILE_GROUP)) {
+                    groupName = (String) serverConfiguration.get(Constants.VIDIUN_RECORDED_FILE_GROUP);
                 }
                 UserPrincipalLookupService lookupService = FileSystems.getDefault().getUserPrincipalLookupService();
                 try {
@@ -230,18 +230,18 @@ public class RecordingModule  extends ModuleBase {
             // At this stage there isn't stream objects available yet
             // but the key to get liveEntry from entry's persistent data is available
             String entryId = Utils.getEntryIdFromClient(client);
-            KalturaLiveEntry liveEntry = (KalturaLiveEntry)KalturaEntryDataPersistence.getPropertyByEntry(entryId, Constants.CLIENT_PROPERTY_KALTURA_LIVE_ENTRY);
+            VidiunLiveEntry liveEntry = (VidiunLiveEntry)VidiunEntryDataPersistence.getPropertyByEntry(entryId, Constants.CLIENT_PROPERTY_VIDIUN_LIVE_ENTRY);
 
-            boolean isNewLiveRecordingEnabled = KalturaAPI.getKalturaAPI().isNewRecordingEnabled(liveEntry);
-            if (isNewLiveRecordingEnabled || liveEntry.recordStatus == null || liveEntry.recordStatus == KalturaRecordStatus.DISABLED){
+            boolean isNewLiveRecordingEnabled = VidiunAPI.getVidiunAPI().isNewRecordingEnabled(liveEntry);
+            if (isNewLiveRecordingEnabled || liveEntry.recordStatus == null || liveEntry.recordStatus == VidiunRecordStatus.DISABLED){
                 logger.info("media-server recording is disabled for [" + liveEntry.id + "] new live recording enabled [" + isNewLiveRecordingEnabled + "]");
                 return;
             }
 
-            KalturaFlavorAssetListResponse liveAssetList = KalturaAPI.getKalturaAPI().getKalturaFlavorAssetListResponse(liveEntry);
+            VidiunFlavorAssetListResponse liveAssetList = VidiunAPI.getVidiunAPI().getVidiunFlavorAssetListResponse(liveEntry);
             if (liveAssetList != null) {
                 synchronized(properties) {
-                    properties.setProperty(Constants.CLIENT_PROPERTY_KALTURA_LIVE_ASSET_LIST, liveAssetList);
+                    properties.setProperty(Constants.CLIENT_PROPERTY_VIDIUN_LIVE_ASSET_LIST, liveAssetList);
                 }
                 logger.debug("Adding live asset list for entry [" + liveEntry.id + "]" );
             }
@@ -297,20 +297,20 @@ public class RecordingModule  extends ModuleBase {
 
         public void onPublish(IMediaStream stream, String streamName, boolean isRecord, boolean isAppend) {
 
-            KalturaLiveEntry liveEntry;
+            VidiunLiveEntry liveEntry;
             WMSProperties properties;
 
 
             try {
                 properties = Utils.getEntryProperties(stream);
-                liveEntry = (KalturaLiveEntry) KalturaEntryDataPersistence.getPropertyByStream(streamName, Constants.CLIENT_PROPERTY_KALTURA_LIVE_ENTRY);
+                liveEntry = (VidiunLiveEntry) VidiunEntryDataPersistence.getPropertyByStream(streamName, Constants.CLIENT_PROPERTY_VIDIUN_LIVE_ENTRY);
             }
             catch(Exception e){
                 logger.error("Failed to retrieve liveEntry for "+ streamName+" :"+e);
                 return;
             }
 
-            if(liveEntry.recordStatus == null || liveEntry.recordStatus == KalturaRecordStatus.DISABLED){
+            if(liveEntry.recordStatus == null || liveEntry.recordStatus == VidiunRecordStatus.DISABLED){
                 logger.info("Entry [" + liveEntry.id + "] recording disabled");
                 return;
             }
@@ -327,10 +327,10 @@ public class RecordingModule  extends ModuleBase {
 
 
 
-            KalturaEntryServerNodeType serverIndex;
+            VidiunEntryServerNodeType serverIndex;
             // This code section should run for source steam that has recording
             synchronized(properties) {
-                 serverIndex = KalturaEntryServerNodeType.get(properties.getPropertyStr(Constants.CLIENT_PROPERTY_SERVER_INDEX, Constants.INVALID_SERVER_INDEX));
+                 serverIndex = VidiunEntryServerNodeType.get(properties.getPropertyStr(Constants.CLIENT_PROPERTY_SERVER_INDEX, Constants.INVALID_SERVER_INDEX));
             }
 
 
@@ -345,19 +345,19 @@ public class RecordingModule  extends ModuleBase {
 
             logger.debug("Stream [" + streamName + "] entry [" + liveEntry.id + "] asset params id [" + assetParamsId + "]");
 
-            KalturaLiveAsset liveAsset;
-            KalturaFlavorAssetListResponse liveAssetList;
+            VidiunLiveAsset liveAsset;
+            VidiunFlavorAssetListResponse liveAssetList;
             synchronized(properties) {
-                 liveAssetList = (KalturaFlavorAssetListResponse) properties.getProperty(Constants.CLIENT_PROPERTY_KALTURA_LIVE_ASSET_LIST);
+                 liveAssetList = (VidiunFlavorAssetListResponse) properties.getProperty(Constants.CLIENT_PROPERTY_VIDIUN_LIVE_ASSET_LIST);
             }
             if (liveAssetList == null){
                 logger.error("Cannot find liveAssetList for stream [" + streamName + "]");
                 return;
             }
-            liveAsset = KalturaAPI.getliveAsset(liveAssetList, assetParamsId);
+            liveAsset = VidiunAPI.getliveAsset(liveAssetList, assetParamsId);
             if (liveAsset == null) {
                 logger.warn("Cannot find liveAsset "+assetParamsId+"for stream [" + streamName + "]");
-                liveAsset = KalturaAPI.getKalturaAPI().getAssetParams(liveEntry, assetParamsId);
+                liveAsset = VidiunAPI.getVidiunAPI().getAssetParams(liveEntry, assetParamsId);
                 if (liveAsset == null) {
                     logger.error("Entry [" + liveEntry.id + "] asset params id [" + assetParamsId + "] asset not found");
                     return;
@@ -377,7 +377,7 @@ public class RecordingModule  extends ModuleBase {
     }
 
 
-    public String startRecording(KalturaLiveEntry liveEntry , KalturaLiveAsset liveAsset, IMediaStream stream, KalturaEntryServerNodeType index, boolean versionFile, boolean startOnKeyFrame, boolean recordData){
+    public String startRecording(VidiunLiveEntry liveEntry , VidiunLiveAsset liveAsset, IMediaStream stream, VidiunEntryServerNodeType index, boolean versionFile, boolean startOnKeyFrame, boolean recordData){
         logger.debug("Stream name [" + stream.getName() + "] entry [" + liveEntry.id + "]");
 
         // create a stream recorder and save it in a map of recorders
@@ -429,12 +429,12 @@ public class RecordingModule  extends ModuleBase {
         return filePath;
     }
 
-    public KalturaLiveEntry appendRecording(KalturaLiveEntry liveEntry, String assetId, KalturaEntryServerNodeType index, String filePath, double duration, boolean isLastChunk) {
+    public VidiunLiveEntry appendRecording(VidiunLiveEntry liveEntry, String assetId, VidiunEntryServerNodeType index, String filePath, double duration, boolean isLastChunk) {
 
-        KalturaLiveEntry updateEntry= null;
+        VidiunLiveEntry updateEntry= null;
         logger.info("Entry [" + liveEntry.id + "] asset [" + assetId + "] index [" + index + "] filePath [" + filePath + "] duration [" + duration + "] isLastChunk [" + isLastChunk + "]");
 
-        if (serverConfiguration.containsKey(Constants.KALTURA_SERVER_UPLOAD_XML_SAVE_PATH))
+        if (serverConfiguration.containsKey(Constants.VIDIUN_SERVER_UPLOAD_XML_SAVE_PATH))
         {
 
             boolean result = saveUploadAsXml (liveEntry.id, assetId, index, filePath, duration, isLastChunk, liveEntry.partnerId);
@@ -446,10 +446,10 @@ public class RecordingModule  extends ModuleBase {
         }
 
         try {
-            updateEntry = KalturaAPI.getKalturaAPI().appendRecording(liveEntry.partnerId,  liveEntry.id, assetId,  index,  filePath,  duration,  isLastChunk);
+            updateEntry = VidiunAPI.getVidiunAPI().appendRecording(liveEntry.partnerId,  liveEntry.id, assetId,  index,  filePath,  duration,  isLastChunk);
         }
         catch (Exception e) {
-            if(e instanceof KalturaApiException && ((KalturaApiException) e).code == Constants.LIVE_STREAM_EXCEEDED_MAX_RECORDED_DURATION){
+            if(e instanceof VidiunApiException && ((VidiunApiException) e).code == Constants.LIVE_STREAM_EXCEEDED_MAX_RECORDED_DURATION){
                 logger.info("Entry [" + liveEntry.id + "] exceeded max recording duration: " + e.getMessage());
             }
             logger.error("Failed to appendRecording: Unexpected error occurred [" + liveEntry.id + "]", e);
@@ -457,7 +457,7 @@ public class RecordingModule  extends ModuleBase {
 
         return updateEntry;
     }
-    private boolean saveUploadAsXml (String entryId, String assetId, KalturaEntryServerNodeType index, String filePath, double duration, boolean isLastChunk, int partnerId)
+    private boolean saveUploadAsXml (String entryId, String assetId, VidiunEntryServerNodeType index, String filePath, double duration, boolean isLastChunk, int partnerId)
     {
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -502,7 +502,7 @@ public class RecordingModule  extends ModuleBase {
             rootElement.appendChild(filepathElem);
 
             // workmode element
-            String workmode = serverConfiguration.containsKey(Constants.KALTURA_SERVER_WOWZA_WORK_MODE) ? (String)serverConfiguration.get(Constants.KALTURA_SERVER_WOWZA_WORK_MODE) : Constants.WOWZA_WORK_MODE_KALTURA;
+            String workmode = serverConfiguration.containsKey(Constants.VIDIUN_SERVER_WOWZA_WORK_MODE) ? (String)serverConfiguration.get(Constants.VIDIUN_SERVER_WOWZA_WORK_MODE) : Constants.WOWZA_WORK_MODE_VIDIUN;
             Element workmodeElem = doc.createElement("workMode");
             workmodeElem.appendChild(doc.createTextNode(workmode));
             rootElement.appendChild(workmodeElem);
@@ -530,7 +530,7 @@ public class RecordingModule  extends ModuleBase {
     }
     private String buildXmlFilePath(String entryId, String assetId) {
         StringBuilder sb = new StringBuilder();
-        sb.append(serverConfiguration.get(Constants.KALTURA_SERVER_UPLOAD_XML_SAVE_PATH));
+        sb.append(serverConfiguration.get(Constants.VIDIUN_SERVER_UPLOAD_XML_SAVE_PATH));
         sb.append("/");
         sb.append(entryId);
         sb.append("_");
