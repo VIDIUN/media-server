@@ -1,4 +1,4 @@
-package com.kaltura.media_server.modules;
+package com.vidiun.media_server.modules;
 
 /**
 * Created by ron.yadgar on 02/02/2017.
@@ -9,19 +9,19 @@ import com.wowza.wms.amf.*;
 import com.wowza.wms.stream.IMediaStream;
 import org.apache.log4j.Logger;
 import java.util.*;
-import com.kaltura.media_server.services.Constants;
+import com.vidiun.media_server.services.Constants;
 
 class AMFInjection{
 
     private long runningId=0;
     private static final String OBJECT_TYPE_KEY = "objectType";
-    private static final String OBJECT_TYPE_SYNCPOINT = "KalturaSyncPoint";
+    private static final String OBJECT_TYPE_SYNCPOINT = "VidiunSyncPoint";
     private static final String TIMESTAMP_KEY = "timestamp";
     private static final String ID_KEY = "id";
     private static final Logger logger = Logger.getLogger(AMFInjection.class);
     private static final String PUBLIC_METADATA = "onMetaDataRecording";
     private static final long START_SYNC_POINTS_DELAY = 0;
-    private int syncPointsInterval = Constants.KALTURA_SYNC_POINTS_INTERVAL_PROPERTY;
+    private int syncPointsInterval = Constants.VIDIUN_SYNC_POINTS_INTERVAL_PROPERTY;
     private Timer t;
 
     public AMFInjection() {

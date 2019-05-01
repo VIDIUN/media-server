@@ -1,4 +1,4 @@
-package com.kaltura.media_server.services;
+package com.vidiun.media_server.services;
 
 /**
  * Created by ron.yadgar on 23/11/2016.
@@ -257,7 +257,7 @@ public class DiagnosticsProvider extends HTTProvider2Base
         rejcetedStream.put("IP", IP);
         String timeStamp = Long.toString(System.currentTimeMillis());
         rejcetedStream.put("Time" , timeStamp);
-        if (errorDiagnostics.size() >= Constants.KALTURA_REJECTED_STEAMS_SIZE){
+        if (errorDiagnostics.size() >= Constants.VIDIUN_REJECTED_STEAMS_SIZE){
             errorDiagnostics.remove(0);
         }
         errorDiagnostics.add(rejcetedStream);

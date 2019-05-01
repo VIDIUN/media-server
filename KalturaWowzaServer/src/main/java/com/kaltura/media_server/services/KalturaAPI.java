@@ -1,4 +1,4 @@
-package com.kaltura.media_server.services;
+package com.vidiun.media_server.services;
 
 import com.kaltura.media_server.services.Constants;
 import com.kaltura.client.*;
@@ -18,68 +18,68 @@ import java.util.TimerTask;
  * Created by ron.yadgar on 15/05/2016.
  */
 
-public class KalturaAPI {
+public class VidiunAPI {
 
     // use the same session key for all Wowza sessions, so all (within a DC) will be directed to the same sphinx to prevent synchronization problems
 
 
-    private static Logger logger = Logger.getLogger(KalturaAPI.class);
+    private static Logger logger = Logger.getLogger(VidiunAPI.class);
     private static Map<String, Object> serverConfiguration;
-    private static KalturaClient client;
+    private static VidiunClient client;
     private static String hostname;
-    private   KalturaConfiguration clientConfig;
-    private  static KalturaAPI KalturaAPIInstance = null;
+    private   VidiunConfiguration clientConfig;
+    private  static VidiunAPI VidiunAPIInstance = null;
     private final int ENABLE = 1;
 
-    public static synchronized void  initKalturaAPI(Map<String, Object> serverConfiguration)  throws KalturaServerException {
-        if  (KalturaAPIInstance!=null){
-            logger.warn("services.KalturaAPI instance is already initialized");
+    public static synchronized void  initVidiunAPI(Map<String, Object> serverConfiguration)  throws VidiunServerException {
+        if  (VidiunAPIInstance!=null){
+            logger.warn("services.VidiunAPI instance is already initialized");
             return;
         }
-        KalturaAPIInstance =  new KalturaAPI(serverConfiguration);
+        VidiunAPIInstance =  new VidiunAPI(serverConfiguration);
     }
 
-    public static synchronized KalturaAPI getKalturaAPI(){
-        if (KalturaAPIInstance== null){
-            throw new NullPointerException("services.KalturaAPI is not initialized");
+    public static synchronized VidiunAPI getVidiunAPI(){
+        if (VidiunAPIInstance== null){
+            throw new NullPointerException("services.VidiunAPI is not initialized");
         }
-        return KalturaAPIInstance;
+        return VidiunAPIInstance;
     }
 
-    private KalturaAPI(Map<String, Object> serverConfiguration)  throws KalturaServerException {
-        logger.info("Initializing KalturaUncaughtException handler");
+    private VidiunAPI(Map<String, Object> serverConfiguration)  throws VidiunServerException {
+        logger.info("Initializing VidiunUncaughtException handler");
         this.serverConfiguration = serverConfiguration;
         try {
             hostname = Utils.getMediaServerHostname();
-            logger.debug("Kaltura server host name: " + hostname);
+            logger.debug("Vidiun server host name: " + hostname);
             initClient();
         } catch (Exception e) {
             if (e instanceof UnknownHostException){
                 logger.error("Failed to determine server host name: ", e);
             }
-            throw new KalturaServerException("Error while loading services.KalturaAPI: " + e.getMessage());
+            throw new VidiunServerException("Error while loading services.VidiunAPI: " + e.getMessage());
         }
     }
 
-    private void initClient() throws KalturaServerException {
-        clientConfig = new KalturaConfiguration();
+    private void initClient() throws VidiunServerException {
+        clientConfig = new VidiunConfiguration();
 
-        int partnerId = serverConfiguration.containsKey(Constants.KALTURA_SERVER_PARTNER_ID) ? (int) serverConfiguration.get(Constants.KALTURA_SERVER_PARTNER_ID) : Constants.MEDIA_SERVER_PARTNER_ID;
+        int partnerId = serverConfiguration.containsKey(Constants.VIDIUN_SERVER_PARTNER_ID) ? (int) serverConfiguration.get(Constants.VIDIUN_SERVER_PARTNER_ID) : Constants.MEDIA_SERVER_PARTNER_ID;
 
 
-        if (!serverConfiguration.containsKey(Constants.KALTURA_SERVER_URL))
-            throw new KalturaServerException("Missing configuration [" + Constants.KALTURA_SERVER_URL + "]");
+        if (!serverConfiguration.containsKey(Constants.VIDIUN_SERVER_URL))
+            throw new VidiunServerException("Missing configuration [" + Constants.VIDIUN_SERVER_URL + "]");
 
-        if (!serverConfiguration.containsKey(Constants.KALTURA_SERVER_ADMIN_SECRET))
-            throw new KalturaServerException("Missing configuration [" + Constants.KALTURA_SERVER_ADMIN_SECRET + "]");
+        if (!serverConfiguration.containsKey(Constants.VIDIUN_SERVER_ADMIN_SECRET))
+            throw new VidiunServerException("Missing configuration [" + Constants.VIDIUN_SERVER_ADMIN_SECRET + "]");
 
-        clientConfig.setEndpoint((String) serverConfiguration.get(Constants.KALTURA_SERVER_URL));
-        logger.debug("Initializing Kaltura client, URL: " + clientConfig.getEndpoint());
+        clientConfig.setEndpoint((String) serverConfiguration.get(Constants.VIDIUN_SERVER_URL));
+        logger.debug("Initializing Vidiun client, URL: " + clientConfig.getEndpoint());
 
-        if (serverConfiguration.containsKey(Constants.KALTURA_SERVER_TIMEOUT))
-            clientConfig.setTimeout(Integer.parseInt((String) serverConfiguration.get(Constants.KALTURA_SERVER_TIMEOUT)) * 1000);
+        if (serverConfiguration.containsKey(Constants.VIDIUN_SERVER_TIMEOUT))
+            clientConfig.setTimeout(Integer.parseInt((String) serverConfiguration.get(Constants.VIDIUN_SERVER_TIMEOUT)) * 1000);
 
-        client = new KalturaClient(clientConfig);
+        client = new VidiunClient(clientConfig);
         client.setPartnerId(partnerId);
         client.setClientTag("MediaServer-" + hostname);
         generateClientSession();
@@ -92,47 +92,47 @@ public class KalturaAPI {
             }
         };
 
-        long sessionGenerationInterval = 23*60*60*1000;// refresh every  23 hours  (KS is valid for a 24h);
+        long sessionGenerationInterval = 23*60*60*1000;// refresh every  23 hours  (VS is valid for a 24h);
 
         Timer timer = new Timer("clientSessionGeneration", true);
         timer.schedule(generateSession, sessionGenerationInterval, sessionGenerationInterval);
     }
 
     private void generateClientSession() {
-        int partnerId = serverConfiguration.containsKey(Constants.KALTURA_SERVER_PARTNER_ID) ? (int) serverConfiguration.get(Constants.KALTURA_SERVER_PARTNER_ID) : Constants.MEDIA_SERVER_PARTNER_ID;
-        String adminSecretForSigning = (String) serverConfiguration.get(Constants.KALTURA_SERVER_ADMIN_SECRET);
+        int partnerId = serverConfiguration.containsKey(Constants.VIDIUN_SERVER_PARTNER_ID) ? (int) serverConfiguration.get(Constants.VIDIUN_SERVER_PARTNER_ID) : Constants.MEDIA_SERVER_PARTNER_ID;
+        String adminSecretForSigning = (String) serverConfiguration.get(Constants.VIDIUN_SERVER_ADMIN_SECRET);
         String userId = "MediaServer";
-        KalturaSessionType type = KalturaSessionType.ADMIN;
+        VidiunSessionType type = VidiunSessionType.ADMIN;
         int expiry = 86400; // ~24 hours
-        String privileges = "disableentitlement,sessionkey:" + Constants.KALTURA_PERMANENT_SESSION_KEY;
+        String privileges = "disableentitlement,sessionkey:" + Constants.VIDIUN_PERMANENT_SESSION_KEY;
         String sessionId;
 
         try {
             sessionId = client.generateSession(adminSecretForSigning, userId, type, partnerId, expiry, privileges);
         } catch (Exception e) {
-            logger.error("Initializing Kaltura client, URL: " + client.getKalturaConfiguration().getEndpoint());
+            logger.error("Initializing Vidiun client, URL: " + client.getVidiunConfiguration().getEndpoint());
             return;
         }
 
         client.setSessionId(sessionId);
-        logger.debug("Kaltura client session id: " + sessionId);    //session id - KS
+        logger.debug("Vidiun client session id: " + sessionId);    //session id - VS
     }
 
-    public KalturaLiveStreamEntry authenticate(String entryId, int partnerId, String token, KalturaEntryServerNodeType serverIndex) throws Exception {
+    public VidiunLiveStreamEntry authenticate(String entryId, int partnerId, String token, VidiunEntryServerNodeType serverIndex) throws Exception {
         if (partnerId == -5){
-            KalturaClient Client= getClient();
-            KalturaLiveEntry liveEntry = Client.getLiveStreamService().get(entryId);
+            VidiunClient Client= getClient();
+            VidiunLiveEntry liveEntry = Client.getLiveStreamService().get(entryId);
             partnerId = liveEntry.partnerId;
         }
 
-        KalturaClient impersonateClient = impersonate(partnerId);
+        VidiunClient impersonateClient = impersonate(partnerId);
 
-        KalturaLiveStreamEntry updatedEntry = impersonateClient.getLiveStreamService().authenticate(entryId, token, hostname, serverIndex);
+        VidiunLiveStreamEntry updatedEntry = impersonateClient.getLiveStreamService().authenticate(entryId, token, hostname, serverIndex);
 
         return updatedEntry;
     }
 
-    private KalturaClient getClient() {
+    private VidiunClient getClient() {
         logger.warn("getClient");
         return client;
 
@@ -141,13 +141,13 @@ public class KalturaAPI {
         //return cloneClient;
     }
 
-    private KalturaClient  impersonate(int partnerId) {
+    private VidiunClient  impersonate(int partnerId) {
 
-        KalturaConfiguration impersonateConfig = new KalturaConfiguration();
+        VidiunConfiguration impersonateConfig = new VidiunConfiguration();
         impersonateConfig.setEndpoint(clientConfig.getEndpoint());
         impersonateConfig.setTimeout(clientConfig.getTimeout());
 
-        KalturaClient cloneClient = new KalturaClient(impersonateConfig);
+        VidiunClient cloneClient = new VidiunClient(impersonateConfig);
         cloneClient.setPartnerId(partnerId);
         cloneClient.setClientTag(client.getClientTag());
         cloneClient.setSessionId(client.getSessionId());
@@ -155,113 +155,113 @@ public class KalturaAPI {
         return cloneClient;
     }
 
-    public KalturaLiveAsset getAssetParams(KalturaLiveEntry liveEntry, int assetParamsId) {
+    public VidiunLiveAsset getAssetParams(VidiunLiveEntry liveEntry, int assetParamsId) {
         //check this function
         if(liveEntry.conversionProfileId <= 0) {
             return null;
         }
-        KalturaConversionProfileAssetParamsFilter assetParamsFilter = new KalturaConversionProfileAssetParamsFilter();
+        VidiunConversionProfileAssetParamsFilter assetParamsFilter = new VidiunConversionProfileAssetParamsFilter();
         assetParamsFilter.conversionProfileIdEqual = liveEntry.conversionProfileId;
 
-        KalturaLiveAssetFilter asstesFilter = new KalturaLiveAssetFilter();
+        VidiunLiveAssetFilter asstesFilter = new VidiunLiveAssetFilter();
         asstesFilter.entryIdEqual = liveEntry.id;
 
-        KalturaClient impersonateClient = impersonate(liveEntry.partnerId);
+        VidiunClient impersonateClient = impersonate(liveEntry.partnerId);
         impersonateClient.startMultiRequest();
         try {
             impersonateClient.getConversionProfileAssetParamsService().list(assetParamsFilter);
             impersonateClient.getFlavorAssetService().list(asstesFilter);
-            KalturaMultiResponse responses = impersonateClient.doMultiRequest();
+            VidiunMultiResponse responses = impersonateClient.doMultiRequest();
 
             Object flavorAssetsList = responses.get(1);
 
-            if(flavorAssetsList instanceof KalturaFlavorAssetListResponse){
-                for(KalturaFlavorAsset liveAsset : ((KalturaFlavorAssetListResponse) flavorAssetsList).objects){
-                    if(liveAsset instanceof KalturaLiveAsset){
+            if(flavorAssetsList instanceof VidiunFlavorAssetListResponse){
+                for(VidiunFlavorAsset liveAsset : ((VidiunFlavorAssetListResponse) flavorAssetsList).objects){
+                    if(liveAsset instanceof VidiunLiveAsset){
                         if (liveAsset.flavorParamsId == assetParamsId){
-                            return (KalturaLiveAsset)liveAsset;
+                            return (VidiunLiveAsset)liveAsset;
                         }
                     }
                 }
             }
 
-        } catch (KalturaApiException e) {
+        } catch (VidiunApiException e) {
             logger.error("Failed to load asset params for live entry [" + liveEntry.id + "]:" + e);
         }
         return null;
     }
 
-    public KalturaFlavorAssetListResponse getKalturaFlavorAssetListResponse(KalturaLiveEntry liveEntry) {
+    public VidiunFlavorAssetListResponse getVidiunFlavorAssetListResponse(VidiunLiveEntry liveEntry) {
         //check this function
         if(liveEntry.conversionProfileId <= 0) {
             return null;
         }
 
-        KalturaLiveAssetFilter asstesFilter = new KalturaLiveAssetFilter();
+        VidiunLiveAssetFilter asstesFilter = new VidiunLiveAssetFilter();
         asstesFilter.entryIdEqual = liveEntry.id;
 
-        KalturaClient impersonateClient = impersonate(liveEntry.partnerId);
+        VidiunClient impersonateClient = impersonate(liveEntry.partnerId);
 
         try {
-            KalturaFlavorAssetListResponse list = impersonateClient.getFlavorAssetService().list(asstesFilter);
+            VidiunFlavorAssetListResponse list = impersonateClient.getFlavorAssetService().list(asstesFilter);
             return list;
-        } catch (KalturaApiException e) {
+        } catch (VidiunApiException e) {
             logger.error("Failed to load asset params for live entry [" + liveEntry.id + "]:" + e);
         }
         return null;
     }
 
-    public KalturaLiveEntry appendRecording(int partnerId, String entryId, String assetId, KalturaEntryServerNodeType nodeType, String filePath, double duration, boolean isLastChunk) throws Exception{
-        KalturaDataCenterContentResource resource = getContentResource(filePath, partnerId);
-        KalturaClient impersonateClient = impersonate(partnerId);
-        KalturaLiveEntry updatedEntry = impersonateClient.getLiveStreamService().appendRecording(entryId, assetId, nodeType, resource, duration, isLastChunk);
+    public VidiunLiveEntry appendRecording(int partnerId, String entryId, String assetId, VidiunEntryServerNodeType nodeType, String filePath, double duration, boolean isLastChunk) throws Exception{
+        VidiunDataCenterContentResource resource = getContentResource(filePath, partnerId);
+        VidiunClient impersonateClient = impersonate(partnerId);
+        VidiunLiveEntry updatedEntry = impersonateClient.getLiveStreamService().appendRecording(entryId, assetId, nodeType, resource, duration, isLastChunk);
 
         return updatedEntry;
     }
 
-    public boolean isNewRecordingEnabled(KalturaLiveEntry liveEntry) {
+    public boolean isNewRecordingEnabled(VidiunLiveEntry liveEntry) {
         try {
-            KalturaClient impersonateClient = impersonate(liveEntry.partnerId);
-            KalturaPermission kalturaPermission = impersonateClient.getPermissionService().get("FEATURE_LIVE_STREAM_KALTURA_RECORDING");
+            VidiunClient impersonateClient = impersonate(liveEntry.partnerId);
+            VidiunPermission vidiunPermission = impersonateClient.getPermissionService().get("FEATURE_LIVE_STREAM_VIDIUN_RECORDING");
 
-            return kalturaPermission.status.getHashCode() == ENABLE;
+            return vidiunPermission.status.getHashCode() == ENABLE;
         }
-        catch (KalturaApiException e) {
+        catch (VidiunApiException e) {
             logger.error("(" + liveEntry.id + ") Error checking New Recording Permission. Code: " + e.code + " Message: " + e.getMessage());
             return false;
         }
     }
 
-    private KalturaDataCenterContentResource getContentResource (String filePath,  int partnerId) {
-        if (!this.serverConfiguration.containsKey(Constants.KALTURA_SERVER_WOWZA_WORK_MODE) || (this.serverConfiguration.get(Constants.KALTURA_SERVER_WOWZA_WORK_MODE).equals(Constants.WOWZA_WORK_MODE_KALTURA))) {
-            KalturaServerFileResource resource = new KalturaServerFileResource();
+    private VidiunDataCenterContentResource getContentResource (String filePath,  int partnerId) {
+        if (!this.serverConfiguration.containsKey(Constants.VIDIUN_SERVER_WOWZA_WORK_MODE) || (this.serverConfiguration.get(Constants.VIDIUN_SERVER_WOWZA_WORK_MODE).equals(Constants.WOWZA_WORK_MODE_VIDIUN))) {
+            VidiunServerFileResource resource = new VidiunServerFileResource();
             resource.localFilePath = filePath;
             return resource;
         }
         else {
-            KalturaClient impersonateClient = impersonate(partnerId);
+            VidiunClient impersonateClient = impersonate(partnerId);
             try {
                 impersonateClient.startMultiRequest();
-                impersonateClient.getUploadTokenService().add(new KalturaUploadToken());
+                impersonateClient.getUploadTokenService().add(new VidiunUploadToken());
 
                 File fileData = new File(filePath);
-                impersonateClient.getUploadTokenService().upload("{1:result:id}", new KalturaFile(fileData));
-                KalturaMultiResponse responses = impersonateClient.doMultiRequest();
+                impersonateClient.getUploadTokenService().upload("{1:result:id}", new VidiunFile(fileData));
+                VidiunMultiResponse responses = impersonateClient.doMultiRequest();
 
-                KalturaUploadedFileTokenResource resource = new KalturaUploadedFileTokenResource();
+                VidiunUploadedFileTokenResource resource = new VidiunUploadedFileTokenResource();
                 Object response = responses.get(1);
-                if (response instanceof KalturaUploadToken)
-                    resource.token = ((KalturaUploadToken)response).id;
+                if (response instanceof VidiunUploadToken)
+                    resource.token = ((VidiunUploadToken)response).id;
                 else {
-                    if (response instanceof KalturaApiException) {
+                    if (response instanceof VidiunApiException) {
                     }
-                    logger.error("Content resource creation error: " + ((KalturaApiException)response).getMessage());
+                    logger.error("Content resource creation error: " + ((VidiunApiException)response).getMessage());
                     return null;
                 }
 
                 return resource;
 
-            } catch (KalturaApiException e) {
+            } catch (VidiunApiException e) {
                 logger.error("Content resource creation error: " + e);
             }
         }
@@ -269,10 +269,10 @@ public class KalturaAPI {
         return null;
     }
 
-    public void cancelReplace(KalturaLiveEntry liveEntry){
+    public void cancelReplace(VidiunLiveEntry liveEntry){
 
         try{
-            KalturaClient impersonateClient = impersonate(liveEntry.partnerId);
+            VidiunClient impersonateClient = impersonate(liveEntry.partnerId);
             impersonateClient.getMediaService().cancelReplace(liveEntry.recordedEntryId);
         }
         catch (Exception e) {
@@ -280,12 +280,12 @@ public class KalturaAPI {
             logger.error("Error occured: " + e);
         }
     }
-    public static KalturaLiveAsset getliveAsset(KalturaFlavorAssetListResponse liveAssetList, int assetParamsId){
+    public static VidiunLiveAsset getliveAsset(VidiunFlavorAssetListResponse liveAssetList, int assetParamsId){
 
-        for(KalturaFlavorAsset liveAsset :  liveAssetList.objects){
-            if(liveAsset instanceof KalturaLiveAsset){
+        for(VidiunFlavorAsset liveAsset :  liveAssetList.objects){
+            if(liveAsset instanceof VidiunLiveAsset){
                 if (liveAsset.flavorParamsId == assetParamsId){
-                    return (KalturaLiveAsset)liveAsset;
+                    return (VidiunLiveAsset)liveAsset;
                 }
             }
         }

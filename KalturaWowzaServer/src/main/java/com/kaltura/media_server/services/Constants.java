@@ -1,4 +1,4 @@
-package com.kaltura.media_server.services;
+package com.vidiun.media_server.services;
 
 /**
  * Created by ron.yadgar on 02/06/2016.
@@ -6,13 +6,13 @@ package com.kaltura.media_server.services;
 public class Constants {
 
     public final static String HTTP_PROVIDER_KEY = "diagnostics";
-    public final static int KALTURA_REJECTED_STEAMS_SIZE = 100;
-    public final static String KALTURA_PERMANENT_SESSION_KEY = "kalturaWowzaPermanentSessionKey";
+    public final static int VIDIUN_REJECTED_STEAMS_SIZE = 100;
+    public final static String VIDIUN_PERMANENT_SESSION_KEY = "vidiunWowzaPermanentSessionKey";
     public final static String CLIENT_PROPERTY_CONNECT_URL = "connecttcUrl";
     public final static String CLIENT_PROPERTY_ENCODER = "connectflashVer";
     public final static String CLIENT_PROPERTY_SERVER_INDEX = "serverIndex";
-    public final static String CLIENT_PROPERTY_KALTURA_LIVE_ENTRY = "KalturaLiveEntry";
-    public final static String CLIENT_PROPERTY_KALTURA_LIVE_ASSET_LIST = "KalturaLiveAssetList";
+    public final static String CLIENT_PROPERTY_VIDIUN_LIVE_ENTRY = "VidiunLiveEntry";
+    public final static String CLIENT_PROPERTY_VIDIUN_LIVE_ASSET_LIST = "VidiunLiveAssetList";
     public final static String REQUEST_PROPERTY_PARTNER_ID = "p";
     public final static String REQUEST_PROPERTY_ENTRY_ID = "e";
     public final static String REQUEST_PROPERTY_SERVER_INDEX = "i";

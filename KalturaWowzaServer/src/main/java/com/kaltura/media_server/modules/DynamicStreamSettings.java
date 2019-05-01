@@ -1,8 +1,8 @@
-package com.kaltura.media_server.modules;
+package com.vidiun.media_server.modules;
 
-import com.kaltura.client.types.KalturaLiveEntry;
-import com.kaltura.media_server.services.Constants;
-import com.kaltura.media_server.services.KalturaEntryDataPersistence;
+import com.vidiun.client.types.VidiunLiveEntry;
+import com.vidiun.media_server.services.Constants;
+import com.vidiun.media_server.services.VidiunEntryDataPersistence;
 
 import org.apache.log4j.Logger;
 
@@ -34,9 +34,9 @@ public class DynamicStreamSettings {
 
 		int segmentDuration = Constants.DEFAULT_CHUNK_DURATION_MILLISECONDS;
 
-		KalturaLiveEntry entry = null;
+		VidiunLiveEntry entry = null;
 		try {
-			entry = (KalturaLiveEntry) KalturaEntryDataPersistence.getPropertyByStream(streamName, Constants.CLIENT_PROPERTY_KALTURA_LIVE_ENTRY);
+			entry = (VidiunLiveEntry) VidiunEntryDataPersistence.getPropertyByStream(streamName, Constants.CLIENT_PROPERTY_VIDIUN_LIVE_ENTRY);
 
 			if (isValidSegmentDuration(entry.segmentDuration, streamName)) {
 				segmentDuration = entry.segmentDuration;

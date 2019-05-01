@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Root version="1">
 	<Application>
-		<Name>kLive</Name>
+		<Name>vLive</Name>
 		<AppType>Live</AppType>
 		<Description></Description>
 		<!-- Uncomment to set application level timeout values
@@ -51,7 +51,7 @@
 			<!-- To turn on transcoder set to: transcoder -->
 			<LiveStreamTranscoder>transcoder</LiveStreamTranscoder>
 			<!-- [templatename].xml or ${SourceStreamName}.xml -->
-			<Templates>@KALTURA_SERVICE_URL@/api_v3/index.php/service/wowza_liveConversionProfile/action/serve/streamName/${SourceStreamName}/f/transcode.xml</Templates>
+			<Templates>@VIDIUN_SERVICE_URL@/api_v3/index.php/service/wowza_liveConversionProfile/action/serve/streamName/${SourceStreamName}/f/transcode.xml</Templates>
 			<ProfileDir>${com.wowza.wms.context.VHostConfigHome}/transcoder/profiles</ProfileDir>
 			<TemplateDir>${com.wowza.wms.context.VHostConfigHome}/transcoder/templates</TemplateDir>
 			<Properties>
@@ -325,22 +325,22 @@
 			<Module>
 				<Name>AuthenticationModule</Name>
 				<Description>AuthenticationModule</Description>
-				<Class>com.kaltura.media_server.modules.AuthenticationModule</Class>
+				<Class>com.vidiun.media_server.modules.AuthenticationModule</Class>
 			</Module>
 			<Module>
 				<Name>LiveStreamSettingsModule</Name>
 				<Description>LiveStreamSettingsModule</Description>
-				<Class>com.kaltura.media_server.modules.LiveStreamSettingsModule</Class>
+				<Class>com.vidiun.media_server.modules.LiveStreamSettingsModule</Class>
 			</Module>
 			<Module>
 				<Name>ModuleRTMPPublishDebug</Name>
 				<Description>ModuleRTMPPublishDebug</Description>
-				<Class>com.kaltura.media_server.modules.RTMPPublishDebugModule</Class>
+				<Class>com.vidiun.media_server.modules.RTMPPublishDebugModule</Class>
 			</Module>
 			<Module>
 				<Name>TemplateControl</Name>
 				<Description>TemplateControl</Description>
-				<Class>com.kaltura.media_server.modules.TemplateControlModule</Class>
+				<Class>com.vidiun.media_server.modules.TemplateControlModule</Class>
 			</Module>
 		</Modules>
 		<!-- Properties defined here will be added to the IApplication.getProperties() and IApplicationInstance.getProperties() collections -->

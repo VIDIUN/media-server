@@ -132,7 +132,7 @@
 				<HTTPStreamerAdapterIDs></HTTPStreamerAdapterIDs>
 				<HTTPProviders>
                     <HTTPProvider>
-                        <BaseClass>com.kaltura.media_server.services.DiagnosticsProvider</BaseClass>
+                        <BaseClass>com.vidiun.media_server.services.DiagnosticsProvider</BaseClass>
                         <RequestFilters>diagnostics*</RequestFilters>
                         <AuthenticationMethod>admin-digest</AuthenticationMethod>
                     </HTTPProvider>
