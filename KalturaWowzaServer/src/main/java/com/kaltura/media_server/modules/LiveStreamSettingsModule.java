@@ -2,8 +2,8 @@ package com.vidiun.media_server.modules;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kaltura.media_server.services.Constants;
-import com.kaltura.media_server.services.Utils;
+import com.vidiun.media_server.services.Constants;
+import com.vidiun.media_server.services.Utils;
 import com.wowza.wms.amf.*;
 import com.wowza.wms.application.*;
 import com.wowza.wms.client.IClient;

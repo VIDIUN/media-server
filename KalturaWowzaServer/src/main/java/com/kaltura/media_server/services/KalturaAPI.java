@@ -1,11 +1,11 @@
 package com.vidiun.media_server.services;
 
-import com.kaltura.media_server.services.Constants;
-import com.kaltura.client.*;
-import com.kaltura.client.enums.KalturaSessionType;
-import com.kaltura.client.types.*;
-import com.kaltura.client.enums.KalturaEntryServerNodeType;
-import com.kaltura.client.services.KalturaPermissionService;
+import com.vidiun.media_server.services.Constants;
+import com.vidiun.client.*;
+import com.vidiun.client.enums.VidiunSessionType;
+import com.vidiun.client.types.*;
+import com.vidiun.client.enums.VidiunEntryServerNodeType;
+import com.vidiun.client.services.VidiunPermissionService;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -136,7 +136,7 @@ public class VidiunAPI {
         logger.warn("getClient");
         return client;
 
-        //KalturaClient cloneClient = new KalturaClient(clientConfig);
+        //VidiunClient cloneClient = new VidiunClient(clientConfig);
         //cloneClient.setSessionId(client.getSessionId());
         //return cloneClient;
     }

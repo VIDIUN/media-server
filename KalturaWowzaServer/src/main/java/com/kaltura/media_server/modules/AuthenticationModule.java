@@ -76,7 +76,7 @@ public class AuthenticationModule extends ModuleBase  {
         String entryId = requestParams.get(Constants.REQUEST_PROPERTY_ENTRY_ID);
         String propertyServerIndex = requestParams.get(Constants.REQUEST_PROPERTY_SERVER_INDEX);
         String token = requestParams.get(Constants.REQUEST_PROPERTY_TOKEN);
-        KalturaEntryServerNodeType serverIndex = KalturaEntryServerNodeType.get(propertyServerIndex);
+        VidiunEntryServerNodeType serverIndex = VidiunEntryServerNodeType.get(propertyServerIndex);
 
         synchronized (properties) {
             properties.setProperty(Constants.CLIENT_PROPERTY_SERVER_INDEX, propertyServerIndex);
@@ -85,8 +85,8 @@ public class AuthenticationModule extends ModuleBase  {
         authenticate(entryId, partnerId, token, serverIndex);
     }
 
-    private void authenticate(String entryId, int partnerId, String token, KalturaEntryServerNodeType serverIndex) throws KalturaApiException, ClientConnectException, Exception {
-        Object authenticationLock = KalturaEntryDataPersistence.getLock(entryId);
+    private void authenticate(String entryId, int partnerId, String token, VidiunEntryServerNodeType serverIndex) throws VidiunApiException, ClientConnectException, Exception {
+        Object authenticationLock = VidiunEntryDataPersistence.getLock(entryId);
         synchronized (authenticationLock) {
             try {
                 logger.debug("(" + entryId + ") Starting authentication process");
@@ -112,10 +112,10 @@ public class AuthenticationModule extends ModuleBase  {
             }
             catch (Exception e) {
                 logger.error("(" + entryId + ") Exception was thrown during authentication process");
-                KalturaEntryDataPersistence.setProperty(entryId, Constants.KALTURA_ENTRY_AUTHENTICATION_ERROR_FLAG, true);
-                KalturaEntryDataPersistence.setProperty(entryId, Constants.KALTURA_ENTRY_AUTHENTICATION_ERROR_TIME, System.currentTimeMillis());
-                KalturaEntryDataPersistence.setProperty(entryId, Constants.KALTURA_ENTRY_AUTHENTICATION_ERROR_MSG, e.getMessage());
-                KalturaEntryDataPersistence.setProperty(entryId, Constants.KALTURA_ENTRY_VALIDATED_TIME, (long)0);
+                VidiunEntryDataPersistence.setProperty(entryId, Constants.VIDIUN_ENTRY_AUTHENTICATION_ERROR_FLAG, true);
+                VidiunEntryDataPersistence.setProperty(entryId, Constants.VIDIUN_ENTRY_AUTHENTICATION_ERROR_TIME, System.currentTimeMillis());
+                VidiunEntryDataPersistence.setProperty(entryId, Constants.VIDIUN_ENTRY_AUTHENTICATION_ERROR_MSG, e.getMessage());
+                VidiunEntryDataPersistence.setProperty(entryId, Constants.VIDIUN_ENTRY_VALIDATED_TIME, (long)0);
                 throw new ClientConnectException("(" + entryId + ") authentication failed. " + e.getMessage());
             }
         }

@@ -47,7 +47,7 @@ public class VidiunEntryDataPersistence {
 	private static void CleanUp() {
 	    try {
             synchronized (entriesPersistenceDataMap) {
-                logger.debug("KalturaEntryDataPersistence CleanUp started");
+                logger.debug("VidiunEntryDataPersistence CleanUp started");
                 Set<String> playingEntriesList = Utils.getEntriesFromApplication(_appInstance);
                 Set<String> hashedEntriesList = entriesPersistenceDataMap.keySet();
                 long currentTime = System.currentTimeMillis();
