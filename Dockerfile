@@ -1,6 +1,6 @@
-#docker build -t kaltura/media-server .
+#docker build -t vidiun/media-server .
 #docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)
-#docker run -p 1935:1935 -p 8087:8087 --name wowza_instance -t kaltura/media-server
+#docker run -p 1935:1935 -p 8087:8087 --name wowza_instance -t vidiun/media-server
 #docker exec -it `docker ps | grep "media-server" | awk '{print $1}' ` bash
 
 ARG WowzaVersion=4.7.6
@@ -30,7 +30,7 @@ WORKDIR  /usr/local/source
 COPY --from=baseWowza   /usr/local/WowzaStreamingEngine/lib /opt/local/WowzaStreamingEngine/lib
 
 #copy all source code
-COPY ./KalturaWowzaServer ./KalturaWowzaServer
+COPY ./VidiunWowzaServer ./VidiunWowzaServer
 COPY ./build.gradle ./build.gradle
 COPY ./settings.gradle ./settings.gradle
 
@@ -42,12 +42,12 @@ RUN gradle -Pversion=$JarVersion prepareRelease
 # create the actual docker
 FROM  wowzamedia/wowza-streaming-engine-linux:$WowzaVersion
 
-MAINTAINER guy.jacubovski@kaltura.com
+MAINTAINER guy.jacubovski@vidiun.com
 
 # for debug and scripts
 RUN apt-get update && apt-get -y install less vim htop curl jq
 
-ENV SERVICE_URL https://www.kaltura.com
+ENV SERVICE_URL https://www.vidiun.com
 ENV PARTNER_ID -5
 ENV PARTNER_ADMIN_SECRET XXX
 ENV SERVER_NODE_HOST_NAME @HOST_NAME@
@@ -69,22 +69,22 @@ RUN rm -rf /usr/local/WowzaStreamingEngine/content/ && \
 WORKDIR  /usr/local/WowzaStreamingEngine/lib
 
 #copy build artifacts from build machine
-COPY --from=build /usr/local/source/KalturaWowzaServer/build/tmp/artifacts/* ./
+COPY --from=build /usr/local/source/VidiunWowzaServer/build/tmp/artifacts/* ./
 
 #create symlinks
-RUN rm -f KalturaClientLib.jar && \
-    rm -f KalturaWowzaServer.jar && \
-    ln -s KalturaClientLib-*.jar KalturaClientLib.jar && \
-    ln -s KalturaWowzaServer-*.jar KalturaWowzaServer.jar
+RUN rm -f VidiunClientLib.jar && \
+    rm -f VidiunWowzaServer.jar && \
+    ln -s VidiunClientLib-*.jar VidiunClientLib.jar && \
+    ln -s VidiunWowzaServer-*.jar VidiunWowzaServer.jar
 
 
 
 # copy configuration
 WORKDIR  /usr/local/WowzaStreamingEngine/conf
 COPY ./installation/configTemplates/.   ./
-COPY ./installation/kalturaEntryPoint.sh   /sbin/
+COPY ./installation/vidiunEntryPoint.sh   /sbin/
 COPY ./installation/updateServerNodeConfiguration.sh   /sbin/
 #COPY ./installation/configTemplates/templates/HD_plus.xml /usr/local/WowzaStreamingEngine/transcoder/templates
 
 
-ENTRYPOINT ["/sbin/kalturaEntryPoint.sh"]
+ENTRYPOINT ["/sbin/vidiunEntryPoint.sh"]

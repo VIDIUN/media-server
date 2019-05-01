@@ -123,7 +123,7 @@ public class VidiunAPI {
         logger.debug("Vidiun client session id: " + sessionId);    //session id - VS
     }
     
-    public String getKS() {
+    public String getVS() {
         return client.getSessionId();
     }
 
@@ -145,7 +145,7 @@ public class VidiunAPI {
         logger.warn("getClient");
         //return client;
 
-        KalturaClient cloneClient = new KalturaClient(clientConfig);
+        VidiunClient cloneClient = new VidiunClient(clientConfig);
         cloneClient.setSessionId(client.getSessionId());
         return cloneClient;
     }

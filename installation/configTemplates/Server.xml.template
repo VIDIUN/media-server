@@ -121,7 +121,7 @@
 				<Type>String</Type>
 			</Property>
 			<Property>
-				<Name>KalturaServerNodeName</Name>
+				<Name>VidiunServerNodeName</Name>
 				<Value>@HOST_NAME@</Value>
 				<Type>String</Type>
 			</Property>

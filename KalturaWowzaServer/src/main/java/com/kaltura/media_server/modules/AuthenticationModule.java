@@ -271,7 +271,7 @@ public class AuthenticationModule extends ModuleBase  {
                         if (queryParameters.get(Constants.REQUEST_PROPERTY_PARTNER_ID) != null) {
                             partnerId = Integer.parseInt(queryParameters.get(Constants.REQUEST_PROPERTY_PARTNER_ID));
                         }
-                        KalturaAPI.getKalturaAPI().sendBeacon(entryByClient,
+                        VidiunAPI.getVidiunAPI().sendBeacon(entryByClient,
                                 partnerId,
                                 "INCORRECT_STREAM_NAME",
                                 streamName,

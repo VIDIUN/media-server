@@ -2,9 +2,9 @@ package com.vidiun.media_server.modules;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kaltura.media_server.services.Constants;
-import com.kaltura.media_server.services.Utils;
-import com.kaltura.media_server.services.KalturaStreamType;
+import com.vidiun.media_server.services.Constants;
+import com.vidiun.media_server.services.Utils;
+import com.vidiun.media_server.services.VidiunStreamType;
 import com.wowza.wms.amf.*;
 import com.wowza.wms.application.*;
 import com.wowza.wms.client.IClient;
@@ -171,7 +171,7 @@ public class LiveStreamSettingsModule extends ModuleBase {
 
 
 	public void onStreamDestroy(IMediaStream stream) {
-		if (Utils.getStreamType(stream, stream.getName()) == KalturaStreamType.UNKNOWN_STREAM_TYPE)
+		if (Utils.getStreamType(stream, stream.getName()) == VidiunStreamType.UNKNOWN_STREAM_TYPE)
 		{
 			logger.info("Stream [" + stream.getName() + "] is not ingest do not call removeListener");
 			return;

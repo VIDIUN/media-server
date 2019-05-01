@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import com.wowza.wms.stream.live.MediaStreamLive;
 import java.net.InetAddress;
-import com.kaltura.media_server.modules.LiveStreamSettingsModule.PacketListener;
+import com.vidiun.media_server.modules.LiveStreamSettingsModule.PacketListener;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 

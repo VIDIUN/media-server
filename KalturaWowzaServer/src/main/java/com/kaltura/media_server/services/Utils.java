@@ -17,7 +17,7 @@ import com.wowza.wms.stream.live.MediaStreamLive;
 import org.apache.log4j.Logger;
 import com.wowza.wms.stream.*;
 import com.wowza.wms.application.WMSProperties;
-import com.kaltura.media_server.listeners.ServerListener;
+import com.vidiun.media_server.listeners.ServerListener;
 import java.util.Map;
 /**
  * Created by ron.yadgar on 26/05/2016.
@@ -238,8 +238,8 @@ public class Utils {
     public static String getMediaServerHostname(boolean full) throws IOException, InterruptedException {
 
         Map<String, Object> serverConfiguration = ServerListener.getServerConfig();
-        if (serverConfiguration.containsKey(Constants.KALTURA_SERVER_NODE_NAME)) {
-            String serverNode=(String) serverConfiguration.get(Constants.KALTURA_SERVER_NODE_NAME);
+        if (serverConfiguration.containsKey(Constants.VIDIUN_SERVER_NODE_NAME)) {
+            String serverNode=(String) serverConfiguration.get(Constants.VIDIUN_SERVER_NODE_NAME);
             if (serverNode!="@HOST_NAME@") {
                 return serverNode;
             }

@@ -125,8 +125,8 @@ public class TemplateControlModule extends ModuleBase {
             ObjectMapper mapper = new ObjectMapper();
             data = mapper.writeValueAsString(entryProperties);
             dataEncode = URLEncoder.encode(data, "UTF-8") ;
-            String ks = KalturaAPI.getKalturaAPI().getKS();
-            String result = "/extraParams/" + dataEncode + "/ks/" + ks;
+            String vs = VidiunAPI.getVidiunAPI().getVS();
+            String result = "/extraParams/" + dataEncode + "/vs/" + vs;
             return result;
         }
 

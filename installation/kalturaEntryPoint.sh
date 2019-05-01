@@ -1,5 +1,5 @@
 #!/bin/bash
-mkdir -p /usr/local/WowzaStreamingEngine/applications/kLive
+mkdir -p /usr/local/WowzaStreamingEngine/applications/vLive
 
 cd /usr/local/WowzaStreamingEngine/conf
 
@@ -19,15 +19,15 @@ if [ -z "$DISABLE_SERVER_NODE_CONF_UPDATE" ]; then
 fi
 
 # replace config
-sed -e "s#@KALTURA_SERVICE_URL@#$SERVICE_URL#g" \
-    -e "s#@KALTURA_PARTNER_ID@#$PARTNER_ID#g" \
-    -e "s#@KALTURA_PARTNER_ADMIN_SECRET@#$PARTNER_ADMIN_SECRET#g"\
+sed -e "s#@VIDIUN_SERVICE_URL@#$SERVICE_URL#g" \
+    -e "s#@VIDIUN_PARTNER_ID@#$PARTNER_ID#g" \
+    -e "s#@VIDIUN_PARTNER_ADMIN_SECRET@#$PARTNER_ADMIN_SECRET#g"\
     -e "s#@HOST_NAME@#$SERVER_NODE_HOST_NAME#g"\
      Server.xml.template > Server.xml
 
-sed -e "s#@KALTURA_SERVICE_URL@#$SERVICE_URL#g" \
-    -e "s#@KALTURA_PARTNER_ID@#$PARTNER_ID#g" \
+sed -e "s#@VIDIUN_SERVICE_URL@#$SERVICE_URL#g" \
+    -e "s#@VIDIUN_PARTNER_ID@#$PARTNER_ID#g" \
     -e "s#streamName#partnerId/$PARTNER_ID/streamName#g" \
-    ./kLive/Application.xml.template > ./kLive/Application.xml
+    ./vLive/Application.xml.template > ./vLive/Application.xml
 
 exec /sbin/entrypoint.sh
